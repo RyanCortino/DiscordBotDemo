@@ -26,9 +26,13 @@ class Program
             .ConfigureServices((context, services) =>
             {
                 // Services go here
+                services.AddTransient<IDiscordBot, DemoDiscordBot>();
             })
             .UseSerilog()
             .Build();
+
+        IDiscordBot svc = ActivatorUtilities.CreateInstance<DemoDiscordBot>(host.Services);
+        svc.Run();
     }
 
     static void BuildConfig(IConfigurationBuilder builder)
