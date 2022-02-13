@@ -9,6 +9,7 @@ public class DemoDiscordBot : IDiscordBot
     private readonly ILogger<DemoDiscordBot> _log;
     private readonly IConfiguration _config;
 
+    // Represents a WebSocket-based Discord client.
     private DiscordSocketClient _client;
 
     public DemoDiscordBot(ILogger<DemoDiscordBot> log, IConfiguration config)
@@ -18,21 +19,19 @@ public class DemoDiscordBot : IDiscordBot
     }
 
     public void Run()
-        => Main().GetAwaiter().GetResult();
+        => MainAsync().GetAwaiter().GetResult();
 
-    private async Task Main()
+    private async Task MainAsync()
     {
-        await Initialize();
+        await InitializeClientAsync();
 
         // Block this task until the program is closed.
         await Task.Delay(-1);
     }
-    private async Task Initialize()
-    {
-        _log.LogInformation("Discord Service Initializing.");
 
+    private async Task InitializeClientAsync()
+    {
         _client = new DiscordSocketClient();
-        _client.Log += Log;
 
         // Retreive our token value from our User Environment Variables.
         var token = _config.GetValue<string>("DiscordToken");
@@ -40,28 +39,22 @@ public class DemoDiscordBot : IDiscordBot
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
 
-        _client.MessageUpdated += MessageUpdated;
-        _client.Ready += () =>
-        {
-            _log.LogInformation("Discord connected with Token: {0}", token.ToString());
-            return Task.CompletedTask;
-        };
+        _client.Log += LogAsync;
+        _client.Ready += ReadyAsync;
 
         _log.LogInformation("Discord Service Initialized.");
     }
 
-    private Task Log(LogMessage logMessage)
+    private Task LogAsync(LogMessage logMessage)
     {
         _log.LogInformation(logMessage.ToString());
 
         return Task.CompletedTask;
     }
-
-    private async Task MessageUpdated(Cacheable<IMessage, ulong> before, SocketMessage after, ISocketMessageChannel channel)
+    private Task ReadyAsync()
     {
-        var message =
-            await before.GetOrDownloadAsync();
+        _log.LogInformation($"{_client.CurrentUser} is connected!");
 
-        _log.LogInformation($"{message} -> {after}");
+        return Task.CompletedTask;
     }
 }

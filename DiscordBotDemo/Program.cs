@@ -31,8 +31,8 @@ class Program
             .UseSerilog()
             .Build();
 
-        IDiscordBot svc = ActivatorUtilities.CreateInstance<DemoDiscordBot>(host.Services);
-        svc.Run();
+        IDiscordBot DiscordSvc = host.Services.GetRequiredService<IDiscordBot>();
+        DiscordSvc.Run();
     }
 
     static void BuildConfig(IConfigurationBuilder builder)
