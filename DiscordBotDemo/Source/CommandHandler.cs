@@ -15,7 +15,7 @@ namespace aberrantGeek.DiscordBot
         private readonly InteractionService _commands;
         private readonly IServiceProvider _services;
 
-        public CommandHandler(ILogger<CommandHandler> logger, IConfiguration config, DiscordSocketClient client, InteractionService commands, IServiceProvider services)
+        public CommandHandler(DiscordSocketClient client, InteractionService commands, IServiceProvider services, ILogger<CommandHandler> logger, IConfiguration config)
             : base(logger, config)
         {
             _client = client;
@@ -130,7 +130,6 @@ namespace aberrantGeek.DiscordBot
 
         private async Task HandleInteraction(SocketInteraction arg)
         {
-            _logger.LogInformation("Handling interaction..");
             try
             {
                 // Create an execution context that matches the generic type paramter of your InteractionModuleBase<T> modules

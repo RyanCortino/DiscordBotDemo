@@ -38,11 +38,11 @@ namespace aberrantGeek.DiscordBot
                 .UseSerilog()
                 .Build();
 
-            ICustomService discordBot = host.Services.GetRequiredService<DemoDiscordBot>();
-            discordBot.Run();
-
             ICustomService commandHandler = host.Services.GetRequiredService<CommandHandler>();
             commandHandler.Run();
+
+            ICustomService discordBot = host.Services.GetRequiredService<DemoDiscordBot>();
+            discordBot.Run();
         }
 
         static void BuildConfig(IConfigurationBuilder builder)
