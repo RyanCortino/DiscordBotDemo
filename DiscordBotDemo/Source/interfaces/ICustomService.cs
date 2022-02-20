@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace aberrantGeek.DiscordBot
+namespace aberrantGeek.VanDamnedBot
 {
     public interface ICustomService
     {

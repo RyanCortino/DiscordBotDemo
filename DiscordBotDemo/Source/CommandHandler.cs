@@ -7,7 +7,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace aberrantGeek.DiscordBot
+namespace aberrantGeek.VanDamnedBot
 {
     public class CommandHandler : BaseService
     {
@@ -24,9 +24,9 @@ namespace aberrantGeek.DiscordBot
         }
 
         public override void Run()
-            => InitializeCommandHandlerAsync().GetAwaiter().GetResult();
+            => InitializeAsync().GetAwaiter().GetResult();
 
-        private async Task InitializeCommandHandlerAsync()
+        private async Task InitializeAsync()
         {
             // Add the public modules that inherit InteractionModuleBase<T> to the InteractionService    
             // await _commands.AddModulesAsync(typeof(CommandHandler).Assembly, _services);

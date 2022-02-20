@@ -5,9 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
-namespace aberrantGeek.DiscordBot
+namespace aberrantGeek.VanDamnedBot
 {
     class Program
     {
@@ -23,7 +24,7 @@ namespace aberrantGeek.DiscordBot
                 .WriteTo.Console()
                 .CreateLogger();
 
-            Log.Logger.Information("Application starting..");
+            Log.Logger.Information("Application starting..");                         
 
             // Setting up Dependency Injections, Configuration, and Logging
             IHost host = Host.CreateDefaultBuilder()
@@ -33,7 +34,7 @@ namespace aberrantGeek.DiscordBot
                     services.AddSingleton<DiscordSocketClient>();
                     services.AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()));
                     services.AddSingleton<CommandHandler>();
-                    services.AddSingleton<DemoDiscordBot>();
+                    services.AddSingleton<VanDamnedBot>();
                 })
                 .UseSerilog()
                 .Build();
@@ -41,7 +42,7 @@ namespace aberrantGeek.DiscordBot
             ICustomService commandHandler = host.Services.GetRequiredService<CommandHandler>();
             commandHandler.Run();
 
-            ICustomService discordBot = host.Services.GetRequiredService<DemoDiscordBot>();
+            ICustomService discordBot = host.Services.GetRequiredService<VanDamnedBot>();
             discordBot.Run();
         }
 

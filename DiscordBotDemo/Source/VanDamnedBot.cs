@@ -3,38 +3,61 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace aberrantGeek.DiscordBot
+namespace aberrantGeek.VanDamnedBot
 {
-    public class DemoDiscordBot : BaseService
+    public class VanDamnedBot : BaseService
     {
         private readonly DiscordSocketClient _client;
         private readonly InteractionService _commands;
+        private readonly List<Insult> _insults;
 
-        public DemoDiscordBot(DiscordSocketClient client, InteractionService commands, ILogger<DemoDiscordBot> logger, IConfiguration config)
+        public string NextInsult
+            => _insults[0].value.ToString();
+
+        public VanDamnedBot(DiscordSocketClient client, InteractionService commands, ILogger<VanDamnedBot> logger, IConfiguration config)
             : base(logger, config)
         {            
             _client = client;
             _commands = commands;
+
+            _insults = new List<Insult>();
         }
 
         public override void Run()
             => MainAsync().GetAwaiter().GetResult();
 
         private async Task MainAsync()
-        {            
+        {
+            await DeserializeInsultsAsync();
             await InitializeDiscordBotAsync();
 
             // Block this task until the program is closed.
             await Task.Delay(Timeout.Infinite);
         }
 
+        private async Task DeserializeInsultsAsync()
+        {
+            using FileStream openStream 
+                = File.OpenRead($"{Directory.GetCurrentDirectory()}/Source/data/{_config.GetValue<string>("JsonFileName")}");
+
+            var insult = await JsonSerializer.DeserializeAsync<Insult>(openStream);
+
+            _insults.Clear();
+            _insults.Add(insult);
+
+            _logger.LogInformation($"VanDamnedBot.DeserializeInsults resulted in {_insults.Count} entries being loaded.");
+        }
+
         private async Task InitializeDiscordBotAsync()
         {
             // Retreive our token value from our User Environment Variables.
-            var token = _config.GetValue<string>("DiscordToken");
+            var token = _config.GetValue<string>("VanDamnedToken");
 
             _commands.Log += LogAsync;
             _client.Log += LogAsync;
