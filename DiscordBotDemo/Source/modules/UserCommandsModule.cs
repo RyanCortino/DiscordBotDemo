@@ -18,7 +18,7 @@ namespace aberrantGeek.VanDamnedBot.Modules
 
         [UserCommand("Insult")]
         public async Task InsultUser(IUser user)
-            => await RespondAsync($"Hey {user.Mention}! {Context.User.Username} calls you {_vanDamme.NextInsult}");
+            => await RespondAsync($"Hey {user.Mention}! {Context.User.Username} says {_vanDamme.NextInsult}");
 
     }
 }

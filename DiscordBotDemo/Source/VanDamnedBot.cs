@@ -18,7 +18,7 @@ namespace aberrantGeek.VanDamnedBot
         private readonly List<Insult> _insults;
 
         public string NextInsult
-            => _insults[0].value.ToString();
+            => _insults[1].value.ToString();
 
         public VanDamnedBot(DiscordSocketClient client, InteractionService commands, ILogger<VanDamnedBot> logger, IConfiguration config)
             : base(logger, config)
@@ -46,12 +46,17 @@ namespace aberrantGeek.VanDamnedBot
             using FileStream openStream 
                 = File.OpenRead($"{Directory.GetCurrentDirectory()}/Source/data/{_config.GetValue<string>("JsonFileName")}");
 
-            var insult = await JsonSerializer.DeserializeAsync<Insult>(openStream);
+            List<Insult> insults = await JsonSerializer.DeserializeAsync<List<Insult>>(openStream);
 
             _insults.Clear();
-            _insults.Add(insult);
+
+            foreach (var insult in insults)
+            {
+                _insults.Add(insult);
+            }
 
             _logger.LogInformation($"VanDamnedBot.DeserializeInsults resulted in {_insults.Count} entries being loaded.");
+
         }
 
         private async Task InitializeDiscordBotAsync()
