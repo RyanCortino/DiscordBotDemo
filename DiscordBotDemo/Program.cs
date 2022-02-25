@@ -39,9 +39,9 @@ namespace aberrantGeek.DiscordBot
                 .Build();
 
             ICustomService commandHandler = host.Services.GetRequiredService<CommandHandler>();
-            commandHandler.Run();
-
             ICustomService discordBot = host.Services.GetRequiredService<DemoDiscordBot>();
+
+            commandHandler.Run();
             discordBot.Run();
         }
 

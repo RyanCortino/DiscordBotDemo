@@ -6,13 +6,6 @@ namespace aberrantGeek.DiscordBot.Modules
 {
     public class GeneralModule : InteractionModuleBase<SocketInteractionContext>
     {
-        private readonly CommandHandler _handler;
-
-        public GeneralModule(CommandHandler handler)
-        {
-            _handler = handler;
-        }
-
         // By setting the [DefaultPermission()] to false, you can disable the command by default.
         [SlashCommand("ping", "Pings the bot and returns its latency.")]
         [DefaultPermission(true)]
